@@ -1,25 +1,25 @@
-import React, { useCallback, useMemo } from 'react'
-import { StyleSheet, Dimensions, View, FlatList, Image } from 'react-native'
+import React, { useCallback, useMemo } from "react";
+import { StyleSheet, Dimensions, View, FlatList, Image } from "react-native";
 
 //shared elements
-import { SharedElement } from 'react-navigation-shared-element'
+import { SharedElement } from "react-navigation-shared-element";
 
-import { Pressable } from 'react-native'
+import { Pressable } from "react-native";
 
 //dimensions
-const { width } = Dimensions.get('screen')
+const { width } = Dimensions.get("screen");
 
 const FeedScreen = (props) => {
-    //----------------------------------------------------------------LOAD GALLERIES----------------------------------------------------------------
+  //----------------------------------------------------------------LOAD GALLERIES----------------------------------------------------------------
 
-    const galleries = [
-        {
-            eventDate: '2021-08-14',
-            galleryID: '255',
-            galleryName: 'Rob + Haib',
-            thumbnail: 'http://144.126.212.5/uploads/thumb/6117ee5d9b958.webp',
-        },
-        {
+  const galleries = [
+    {
+      eventDate: "2021-08-14",
+      galleryID: "255",
+      galleryName: "Rob + Haib",
+      thumbnail: "http://144.126.212.5/uploads/thumb/6117ee5d9b958.webp",
+    },
+    /* {
             eventDate: '2021-08-13',
             galleryID: '253',
             galleryName: 'Pizza',
@@ -72,119 +72,119 @@ const FeedScreen = (props) => {
             galleryID: '97',
             galleryName: 'Family',
             thumbnail: 'http://164.90.246.1/uploads/thumb/60c52e7319378.jpeg',
-        },
-    ]
+        }, */
+  ];
 
-    const FeedCell = (props) => {
-        return (
-            <Pressable onPress={props.galleryPressedHandler}>
-                <SharedElement
-                    id={`${props.galleryData.galleryID}`}
-                    style={styles.sharedElement}
-                >
-                    <Image
-                        style={styles.image}
-                        source={{
-                            uri: props.galleryData.thumbnail,
-                        }}
-                        resizeMode="cover"
-                    />
-                </SharedElement>
-            </Pressable>
-        )
-    }
-
-    //----------------------------------------------------------------FLAT LIST FUNCTIONS--------------------------------------------------------------
-    const render = useCallback(
-        ({ item, index }) => {
-            return (
-                <FeedCell
-                    galleryData={item}
-                    galleryPressedHandler={() => {
-                        galleryPressedHandler(
-                            item.galleryID,
-                            item.thumbnail,
-                            item.galleryName,
-                            index
-                        )
-                    }}
-                    galleryName={item.galleryName}
-                    oneEllipsisPressed={() => {
-                        oneEllipsisPressed(item.galleryID, index)
-                    }}
-                    key={item.galleryID}
-                />
-            )
-        },
-        [galleries]
-    )
-
-    const galleryPressedHandler = useCallback(
-        (galleryID, thumbnail, galName, index) => {
-            props.navigation.navigate('OtherGalleryView', {
-                galleryID,
-                thumbnail,
-                galName,
-                index,
-            })
-        },
-        []
-    )
-
-    const oneEllipsisPressed = useCallback((galleryID, index) => {}, [])
-
-    const itemHeight = useMemo(() => width + 40, [])
-
-    const layOut = useCallback(
-        (data, index) => ({
-            length: itemHeight,
-            offset: itemHeight * index,
-            index,
-        }),
-        []
-    )
-
-    const keyExtractor = useCallback((item) => `${item.galleryID}`, [])
-
-    //----------------------------------------------------------------FLAT LIST FUNCTIONS--------------------------------------------------------------
-
+  const FeedCell = (props) => {
     return (
-        <View style={{ flex: 1 }}>
-            <FlatList
-                style={styles.flatList}
-                data={galleries}
-                renderItem={render}
-                layOut={layOut}
-                keyExtractor={keyExtractor}
-                contentContainerStyle={{
-                    paddingLeft: 20,
-                }}
-                showsVerticalScrollIndicator={false}
-            />
-        </View>
-    )
-}
+      <Pressable onPress={props.galleryPressedHandler}>
+        <SharedElement
+          id={`${props.galleryData.galleryID}`}
+          style={styles.sharedElement}
+        >
+          <Image
+            style={styles.image}
+            source={{
+              uri: props.galleryData.thumbnail,
+            }}
+            resizeMode="cover"
+          />
+        </SharedElement>
+      </Pressable>
+    );
+  };
+
+  //----------------------------------------------------------------FLAT LIST FUNCTIONS--------------------------------------------------------------
+  const render = useCallback(
+    ({ item, index }) => {
+      return (
+        <FeedCell
+          galleryData={item}
+          galleryPressedHandler={() => {
+            galleryPressedHandler(
+              item.galleryID,
+              item.thumbnail,
+              item.galleryName,
+              index
+            );
+          }}
+          galleryName={item.galleryName}
+          oneEllipsisPressed={() => {
+            oneEllipsisPressed(item.galleryID, index);
+          }}
+          key={item.galleryID}
+        />
+      );
+    },
+    [galleries]
+  );
+
+  const galleryPressedHandler = useCallback(
+    (galleryID, thumbnail, galName, index) => {
+      props.navigation.navigate("OtherGalleryView", {
+        galleryID,
+        thumbnail,
+        galName,
+        index,
+      });
+    },
+    []
+  );
+
+  const oneEllipsisPressed = useCallback((galleryID, index) => {}, []);
+
+  const itemHeight = useMemo(() => width + 40, []);
+
+  const layOut = useCallback(
+    (data, index) => ({
+      length: itemHeight,
+      offset: itemHeight * index,
+      index,
+    }),
+    []
+  );
+
+  const keyExtractor = useCallback((item) => `${item.galleryID}`, []);
+
+  //----------------------------------------------------------------FLAT LIST FUNCTIONS--------------------------------------------------------------
+
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        style={styles.flatList}
+        data={galleries}
+        renderItem={render}
+        layOut={layOut}
+        keyExtractor={keyExtractor}
+        contentContainerStyle={{
+          paddingLeft: 20,
+        }}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    flatList: {
-        flex: 1,
-    },
-    sharedElement: {
-        height: width * 0.9,
-        width: width * 0.9,
-        borderRadius: width * 0.9 * 0.05,
-        backgroundColor: 'white',
-        marginTop: 10,
-    },
-    image: {
-        height: width * 0.9 - 70 - 20,
-        width: width * 0.9 - 20,
-        borderRadius: width * 0.9 * 0.033,
-        top: 10,
-        left: 10,
-        right: 10,
-        borderColor: 'white',
-    },
-})
+  flatList: {
+    flex: 1,
+  },
+  sharedElement: {
+    height: width * 0.9,
+    width: width * 0.9,
+    borderRadius: width * 0.9 * 0.05,
+    backgroundColor: "white",
+    marginTop: 10,
+  },
+  image: {
+    height: width * 0.9 - 70 - 20,
+    width: width * 0.9 - 20,
+    borderRadius: width * 0.9 * 0.033,
+    top: 10,
+    left: 10,
+    right: 10,
+    borderColor: "white",
+  },
+});
 
-export default FeedScreen
+export default FeedScreen;
